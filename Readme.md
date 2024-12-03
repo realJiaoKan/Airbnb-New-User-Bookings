@@ -1,6 +1,7 @@
 # 期末项目
 
 ## 描述  
+>
 >与其醒来时发现“请勿打扰”标志被忽视，Airbnb的旅行者们却在一个充满奇幻色彩的树屋里与鸟儿一同醒来，或是在一艘水上房屋的甲板上喝着晨间咖啡，或者与房东一起分享一顿地道的早餐。
 <br><br>
 Airbnb的新用户可以在超过190个国家的34,000多个城市预订住宿。通过准确预测新用户第一次预订旅行体验的地点，Airbnb能够为社区提供更个性化的内容，缩短首次预订的平均时间，并更好地预测需求。
@@ -10,10 +11,11 @@ Airbnb的新用户可以在超过190个国家的34,000多个城市预订住宿�
 这是来自Kaggle的一个九年前的比赛([原链接](https://www.kaggle.com/competitions/airbnb-recruiting-new-user-bookings/overview)),在此为了方便我们搬运一下原文~
 
 ## 评估  
+
 本次比赛的评估指标是NDCG（归一化折扣累积增益，Normalized Discounted Cumulative Gain）@k，其中 $k=5$。NDCG的计算方式如下：
 $$
 DCG_k = \sum_{i=1}^{k} \frac{2^{rel_i} - 1}{\log_2(i + 1)}\\
-nDCG_k = \frac{DCG_k}{IDCG_k}
+NDCG_k = \frac{DCG_k}{IDCG_k}
 $$
 其中 $rel_i$ 是结果在第 $i$ 个位置的相关性。
 
@@ -27,9 +29,11 @@ $IDCG_k$ 是给定查询的最大可能（理想）$DCG$ 值。所有NDCG计算�
 - [ US, FR ] 的 $DCG = \frac{2^{0}-1}{\log_2(1+1)} + \frac{2^{1}-1}{\log_2(2+1)} = \frac{1}{1.58496} = 0.6309$
 
 ## 提交文件  
+
 对于数据集中每个用户，提交文件应包含两列：`id` 和 `country`。目的地国家的预测必须按概率从高到低排序，最有可能的国家放在最前面。
 
 文件应包含一个表头，格式如下：
+
 ```
 id,country
 000am9932b,NDF
@@ -38,5 +42,46 @@ id,country
 01wi37r0hw,FR
 ...
 ```
+
 每一行代表一个用户的 `id` 和该用户的预测国家，且每个用户可以有多个国家预测。每个用户的所有预测必须紧接在一起。
 
+## 数据集描述  
+
+在此挑战中，您将获得用户列表，包括他们的人口统计信息、网络会话记录以及一些汇总统计数据。任务是预测新用户第一次预订的目的地国家。该数据集中的所有用户均来自美国。
+
+目的地国家共有12个可能的结果：'US'（美国）、'FR'（法国）、'CA'（加拿大）、'GB'（英国）、'ES'（西班牙）、'IT'（意大利）、'PT'（葡萄牙）、'NL'（荷兰）、'DE'（德国）、'AU'（澳大利亚）、'NDF'（未找到预订目的地）和'other'（其他）。请注意，'NDF' 与 'other' 不同，'other' 表示有预订，但目的地国家不在列表中，而'NDF' 表示没有发生预订。
+
+训练集和测试集按日期划分。在测试集中，您将预测2014年7月1日之后首次活动的新用户（注意：2015年12月5日比赛重启时进行了更新）。在会话数据集中，数据仅追溯到2014年1月1日，而用户数据集可以追溯到2010年。
+
+### 文件描述
+
+- **train_users.csv** - 用户训练集
+- **test_users.csv** - 用户测试集
+  - **id**: 用户ID
+  - **date_account_created**: 账户创建日期
+  - **timestamp_first_active**: 用户首次活动的时间戳，注意这可能早于账户创建日期或首次预订日期，因为用户可以在注册前进行搜索
+  - **date_first_booking**: 首次预订日期
+  - **gender**: 性别
+  - **age**: 年龄
+  - **signup_method**: 注册方式
+  - **signup_flow**: 用户来到注册页面的方式
+  - **language**: 国际语言偏好
+  - **affiliate_channel**: 付费营销渠道
+  - **affiliate_provider**: 营销提供商，如Google、Craigslist等
+  - **first_affiliate_tracked**: 用户在注册前互动的第一个营销活动
+  - **signup_app**: 注册使用的应用
+  - **first_device_type**: 第一次使用的设备类型
+  - **first_browser**: 第一次使用的浏览器
+  - **country_destination**: 这是您要预测的目标变量，表示用户的预订国家
+
+- **sessions.csv** - 用户的网络会话日志  
+  - **user_id**: 与用户表中的 `id` 列连接
+  - **action**: 用户在网站上执行的操作
+  - **action_type**: 操作类型
+  - **action_detail**: 操作详细信息
+  - **device_type**: 设备类型
+  - **secs_elapsed**: 操作执行的时间（秒）
+
+- **countries.csv** - 数据集中目的地国家的汇总统计及其位置
+- **age_gender_bkts.csv** - 用户年龄段、性别和预订国家的汇总统计
+- **sample_submission.csv** - 提交预测的正确格式示例
