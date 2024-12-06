@@ -3,3 +3,4 @@ __pycache__/
 cache/
 data/
 result.csv
+result_analysis.csv

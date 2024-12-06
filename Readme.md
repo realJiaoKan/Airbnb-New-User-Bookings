@@ -84,7 +84,6 @@ There are 12 possible destination labels:
 - `2.stacking.ipynb`: Model stacking implementation.
 - `3.rank_prediction.ipynb`: Ranking model for destination prediction.
 - `[Deprecated]binary_classification.ipynb`: Initial binary classification experiments (archived).
-- `result.csv`: Submission file.
 
 ## References
 
