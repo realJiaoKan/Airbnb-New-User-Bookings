@@ -52,36 +52,3 @@ id,country
 目的地国家共有12个可能的结果：'US'（美国）、'FR'（法国）、'CA'（加拿大）、'GB'（英国）、'ES'（西班牙）、'IT'（意大利）、'PT'（葡萄牙）、'NL'（荷兰）、'DE'（德国）、'AU'（澳大利亚）、'NDF'（未找到预订目的地）和'other'（其他）。请注意，'NDF' 与 'other' 不同，'other' 表示有预订，但目的地国家不在列表中，而'NDF' 表示没有发生预订。
 
 训练集和测试集按日期划分。在测试集中，您将预测2014年7月1日之后首次活动的新用户（注意：2015年12月5日比赛重启时进行了更新）。在会话数据集中，数据仅追溯到2014年1月1日，而用户数据集可以追溯到2010年。
-
-### 文件描述
-
-- **train_users.csv** - 用户训练集
-- **test_users.csv** - 用户测试集
-  - **id**: 用户ID
-  - **date_account_created**: 账户创建日期
-  - **timestamp_first_active**: 用户首次活动的时间戳，注意这可能早于账户创建日期或首次预订日期，因为用户可以在注册前进行搜索
-  - **date_first_booking**: 首次预订日期
-  - **gender**: 性别
-  - **age**: 年龄
-  - **signup_method**: 注册方式
-  - **signup_flow**: 用户来到注册页面的方式
-  - **language**: 国际语言偏好
-  - **affiliate_channel**: 付费营销渠道
-  - **affiliate_provider**: 营销提供商，如Google、Craigslist等
-  - **first_affiliate_tracked**: 用户在注册前互动的第一个营销活动
-  - **signup_app**: 注册使用的应用
-  - **first_device_type**: 第一次使用的设备类型
-  - **first_browser**: 第一次使用的浏览器
-  - **country_destination**: 这是您要预测的目标变量，表示用户的预订国家
-
-- **sessions.csv** - 用户的网络会话日志  
-  - **user_id**: 与用户表中的 `id` 列连接
-  - **action**: 用户在网站上执行的操作
-  - **action_type**: 操作类型
-  - **action_detail**: 操作详细信息
-  - **device_type**: 设备类型
-  - **secs_elapsed**: 操作执行的时间（秒）
-
-- **countries.csv** - 数据集中目的地国家的汇总统计及其位置
-- **age_gender_bkts.csv** - 用户年龄段、性别和预订国家的汇总统计
-- **sample_submission.csv** - 提交预测的正确格式示例
