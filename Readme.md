@@ -1,38 +1,38 @@
-# 期末项目
+# Airbnb New User Bookings
 
-## 描述  
->
->与其醒来时发现“请勿打扰”标志被忽视，Airbnb的旅行者们却在一个充满奇幻色彩的树屋里与鸟儿一同醒来，或是在一艘水上房屋的甲板上喝着晨间咖啡，或者与房东一起分享一顿地道的早餐。
-<br><br>
-Airbnb的新用户可以在超过190个国家的34,000多个城市预订住宿。通过准确预测新用户第一次预订旅行体验的地点，Airbnb能够为社区提供更个性化的内容，缩短首次预订的平均时间，并更好地预测需求。
-<br><br>
-在这场招聘比赛中，Airbnb挑战你预测新用户会在哪个国家进行首次预订。那些提供优秀答案并解释其解决方法的参赛者，将有机会获得Airbnb数据科学与分析团队的面试机会。
+## Project Description
 
-这是来自Kaggle的一个九年前的比赛([原链接](https://www.kaggle.com/competitions/airbnb-recruiting-new-user-bookings/overview)),在此为了方便我们搬运一下原文~
+Airbnb offers unique travel experiences, allowing users to book stays in over 190 countries and 34,000 cities. Predicting where new users will make their first booking enables Airbnb to provide personalized content, reduce the time to first booking, and better forecast demand.
 
-## 评估  
+This project aims to predict the first booking destination of new users, leveraging user demographics, web session data, and other aggregated statistics.
 
-本次比赛的评估指标是NDCG（归一化折扣累积增益，Normalized Discounted Cumulative Gain）@k，其中 $k=5$。NDCG的计算方式如下：
-$$
-DCG_k = \sum_{i=1}^{k} \frac{2^{rel_i} - 1}{\log_2(i + 1)}\\
-NDCG_k = \frac{DCG_k}{IDCG_k}
-$$
-其中 $rel_i$ 是结果在第 $i$ 个位置的相关性。
+This project is inspired by a Kaggle competition ([original link](https://www.kaggle.com/competitions/airbnb-recruiting-new-user-bookings/overview)) and has been adapted for learning and experimentation purposes.
 
-$IDCG_k$ 是给定查询的最大可能（理想）$DCG$ 值。所有NDCG计算的相对值范围为 $0.0$ 到 $1.0$。
+## Evaluation Metric
 
-对于每个新用户，您最多可以对首次预订的国家做出5个预测。真实的预订国家被标记为相关性 $= 1$，其他的相关性 $= 0$。
+The performance metric for this task is **NDCG@5** (Normalized Discounted Cumulative Gain).
 
-例如，如果某个用户的预订国家是法国（FR），则预测结果如下：
+The formula for NDCG is:
 
-- [ FR ] 的 $NDCG = \frac{2^{1}-1}{\log_2(1+1)} = 1.0$
-- [ US, FR ] 的 $DCG = \frac{2^{0}-1}{\log_2(1+1)} + \frac{2^{1}-1}{\log_2(2+1)} = \frac{1}{1.58496} = 0.6309$
+\[
+DCG_k = \sum_{i=1}^{k} \frac{2^{rel_i} - 1}{\log_2(i + 1)} \quad \text{and} \quad NDCG_k = \frac{DCG_k}{IDCG_k}
+\]
 
-## 提交文件  
+Where:
 
-对于数据集中每个用户，提交文件应包含两列：`id` 和 `country`。目的地国家的预测必须按概率从高到低排序，最有可能的国家放在最前面。
+- \( rel_i \): Relevance at rank \( i \).
+- \( IDCG_k \): Ideal DCG value, ensuring the NDCG values range from \( 0.0 \) to \( 1.0 \).
 
-文件应包含一个表头，格式如下：
+Each user can have up to 5 predictions for the first booking country. The true country is assigned a relevance score of 1, while all others are 0.
+
+Example for a user booking in France (FR):
+
+- Prediction: `[FR]` → NDCG = \( 1.0 \)
+- Prediction: `[US, FR]` → NDCG = \( 0.6309 \)
+
+## Submission Format
+
+The submission file must contain two columns: `id` and `country`, where predictions are ranked by probability (most likely first). Include a header, formatted as follows:
 
 ```
 id,country
@@ -43,12 +43,51 @@ id,country
 ...
 ```
 
-每一行代表一个用户的 `id` 和该用户的预测国家，且每个用户可以有多个国家预测。每个用户的所有预测必须紧接在一起。
+## Dataset Description
 
-## 数据集描述  
+The dataset includes:
 
-在此挑战中，您将获得用户列表，包括他们的人口统计信息、网络会话记录以及一些汇总统计数据。任务是预测新用户第一次预订的目的地国家。该数据集中的所有用户均来自美国。
+- **User Data:** Demographic information and booking details, covering activity from 2010 onward.
+- **Session Data:** Web interaction logs from 2014 onward.
 
-目的地国家共有12个可能的结果：'US'（美国）、'FR'（法国）、'CA'（加拿大）、'GB'（英国）、'ES'（西班牙）、'IT'（意大利）、'PT'（葡萄牙）、'NL'（荷兰）、'DE'（德国）、'AU'（澳大利亚）、'NDF'（未找到预订目的地）和'other'（其他）。请注意，'NDF' 与 'other' 不同，'other' 表示有预订，但目的地国家不在列表中，而'NDF' 表示没有发生预订。
+### Prediction Categories
 
-训练集和测试集按日期划分。在测试集中，您将预测2014年7月1日之后首次活动的新用户（注意：2015年12月5日比赛重启时进行了更新）。在会话数据集中，数据仅追溯到2014年1月1日，而用户数据集可以追溯到2010年。
+There are 12 possible destination labels:
+
+- `US` (United States)
+- `FR` (France)
+- `CA` (Canada)
+- `GB` (United Kingdom)
+- `ES` (Spain)
+- `IT` (Italy)
+- `PT` (Portugal)
+- `NL` (Netherlands)
+- `DE` (Germany)
+- `AU` (Australia)
+- `NDF` (No destination found)
+- `other` (Destination outside the listed categories)
+
+**Note:** `NDF` indicates no booking occurred, while `other` indicates a booking outside the predefined countries.
+
+## Workflow Overview
+
+1. **Data Preprocessing:** Extract and clean demographic and session data.
+2. **Feature Engineering:** Create predictive features from user and session data.
+3. **Modeling:** Implement and evaluate various algorithms (e.g., stacking, ranking, and classification).
+4. **Evaluation:** Assess model performance using NDCG@5.
+5. **Prediction:** Generate predictions for submission.
+
+## Repository Structure
+
+- `0.session.ipynb`: Session data analysis and feature engineering.
+- `1.preprocess.ipynb`: Data cleaning and preprocessing scripts.
+- `2.stacking.ipynb`: Model stacking implementation.
+- `3.rank_prediction.ipynb`: Ranking model for destination prediction.
+- `[Deprecated]binary_classification.ipynb`: Initial binary classification experiments (archived).
+- `result.csv`: Submission file.
+
+## References
+
+This project is adapted from the original Kaggle competition. You can find the competition details [here](https://www.kaggle.com/competitions/airbnb-recruiting-new-user-bookings/overview).
+
+Feel free to explore the repository and contribute!
